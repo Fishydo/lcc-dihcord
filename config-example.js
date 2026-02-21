@@ -7,10 +7,10 @@ module.exports = {
 
     Discord: {
         // —— Things that are required for the whole project to work.
-        token: "", // —— Your bot's token.
-        botId: "", // —— The bot's ID.
-        guildId: "", // —— The server ID on where the commands will be deployed.
-        verifiedRole: "", // —— Role that will be added to the user when they verify their account.
+        token: "MTQ3NDU0MjY2MzE3NjAyODI1Mw.G5UnN3.xzYzTKErHN3km7YhM1Dg9Cg3lrVM9Nnu9WA0Rs", // —— Your bot's token.
+        botId: "1474542663176028253", // —— The bot's ID.
+        guildId: "1474543090583994490", // —— The server ID on where the commands will be deployed.
+        verifiedRole: "1474549843148935321", // —— Role that will be added to the user when they verify their account.
 
         // —— For users that want to have a role removed upon verification, if you want this, set remove-role to true, and set your remove role ID.
         removeRole: false,
