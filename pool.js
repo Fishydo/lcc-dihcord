@@ -6,6 +6,7 @@ const logger = new Signale({ scope: 'Pool' });
 
 // —— Making the functions!!
 let linkPool = [];
+let accountIpPool = {};
 
 function createLink(discordID) { 
     const linkID = createCode(8);
@@ -35,5 +36,14 @@ function getDiscordId(linkID) {
     return false;
 }
 
+function isValidAccountIp(discordID, ipAddress) {
+    if (!accountIpPool[discordID]) return true;
+    return accountIpPool[discordID] === ipAddress;
+}
 
-module.exports = { isValidLink, removeLink, createLink, getDiscordId };
+function setAccountIp(discordID, ipAddress) {
+    accountIpPool[discordID] = ipAddress;
+}
+
+
+module.exports = { isValidLink, removeLink, createLink, getDiscordId, isValidAccountIp, setAccountIp };
