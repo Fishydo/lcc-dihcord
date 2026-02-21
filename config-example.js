@@ -26,7 +26,7 @@ module.exports = {
     },
 
     reCAPTCHA: {
-        secretKey: "",
-        publicKey: ""
+        secretKey: "6LdXt3IsAAAAADrN0qhGPTrL0gQZnj2As6SVEPl-",
+        publicKey: "6LdXt3IsAAAAAH_74J2tAtL25Er9NWSQN84ZUgF-"
     }
 }
