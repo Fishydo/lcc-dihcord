@@ -29,3 +29,17 @@ span {
     font-weight: 400;
     color: white;
 }
+
+.btn {
+    background-color: #5865F2;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 12px 24px;
+}
+
+.btn:hover {
+    background-color: #4752c4;
+}
