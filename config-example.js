@@ -7,7 +7,7 @@ module.exports = {
 
     Discord: {
         // —— Things that are required for the whole project to work.
-        token: "MTQ3NDU0MjY2MzE3NjAyODI1Mw.G84KB4.Fu_Y3PoF1u2KU_Dh1nVsGc-pU1YX-0b-E6aqWE", // —— Your bot's token.
+        token: "MTQ3NDU0MjY2MzE3NjAyODI1Mw.GPn01f.ZfNsVbDlSsTkBlyt5POBda8uCl1qFYUnlMQQa0", // —— Your bot but its not a secret so its ok to have in this code.
         botId: "1474542663176028253", // —— The bot's ID.
         guildId: "1474543090583994490", // —— The server ID on where the commands will be deployed.
         verifiedRole: "1474549843148935321", // —— Role that will be added to the user when they verify their account.
