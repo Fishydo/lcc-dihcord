@@ -168,7 +168,7 @@ app.post('/verify/:verifyId?', async (req, res) => {
         await addRole(discordId);
         await removeRole(discordId);
         pool.removeLink(req.params.verifyId);
-        logger.info(`Verified user ${member.user.tag} (${discordId}) from IP ${requestIpAddress}.`);
+
         return res.sendFile(path.join(__dirname, '/html/valid.html'));
     } catch (error) {
         logger.error(`Failed to fetch member ${discordId} for verification checks.`);
