@@ -152,8 +152,18 @@ app.post('/verify/:verifyId?', async (req, res) => {
 
     if (!response.data.success) return res.sendFile(path.join(__dirname, '/html/invalidCaptcha.html'));
     if (!pool.isValidLink(req.params.verifyId)) return res.sendFile(path.join(__dirname, '/html/invalidLink.html'));
-    await addRole(pool.getDiscordId(req.params.verifyId));
-    await removeRole(pool.getDiscordId(req.params.verifyId));
+
+    const discordId = pool.getDiscordId(req.params.verifyId);
+    const requestIpAddress = (req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
+
+    if (!pool.isValidAccountIp(discordId, requestIpAddress)) {
+        logger.warn(`Blocked verification for ${discordId} due to mismatched IP address.`);
+        return res.sendFile(path.join(__dirname, '/html/invalidLink.html'));
+    }
+
+    pool.setAccountIp(discordId, requestIpAddress);
+    await addRole(discordId);
+    await removeRole(discordId);
     pool.removeLink(req.params.verifyId);
     res.sendFile(path.join(__dirname, '/html/valid.html'));
 });
