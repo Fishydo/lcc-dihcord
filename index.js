@@ -7,7 +7,6 @@ const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
 const express = require('express');
 const path = require('path');
-const axios = require('axios');
 const https = require('https');
 const pool = require('./pool');
 const config = require("./config.js");
@@ -135,22 +134,11 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/verify/:verifyId?', (req, res) => {
     if (!req.params.verifyId) return res.sendFile(path.join(__dirname, '/html/invalidLink.html'));
     if (!pool.isValidLink(req.params.verifyId)) return res.sendFile(path.join(__dirname, '/html/invalidLink.html'));
-    res.render(path.join(__dirname, '/html/verify.html'), { publicKey: config.reCAPTCHA.publicKey });
+    res.sendFile(path.join(__dirname, '/html/verify.html'));
 });
 
 // POST /verify/id
 app.post('/verify/:verifyId?', async (req, res) => {
-    if (!req.body || !req.body['g-recaptcha-response']) return res.sendFile(path.join(__dirname, '/html/invalidLink.html'));
-
-    const response = await axios({
-        method: 'post',
-        url: `https://www.google.com/recaptcha/api/siteverify?secret=${config.reCAPTCHA.secretKey}&response=${req.body['g-recaptcha-response']}`,
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
-    });
-
-    if (!response.data.success) return res.sendFile(path.join(__dirname, '/html/invalidCaptcha.html'));
     if (!pool.isValidLink(req.params.verifyId)) return res.sendFile(path.join(__dirname, '/html/invalidLink.html'));
 
     const discordId = pool.getDiscordId(req.params.verifyId);
@@ -161,11 +149,30 @@ app.post('/verify/:verifyId?', async (req, res) => {
         return res.sendFile(path.join(__dirname, '/html/invalidLink.html'));
     }
 
-    pool.setAccountIp(discordId, requestIpAddress);
-    await addRole(discordId);
-    await removeRole(discordId);
-    pool.removeLink(req.params.verifyId);
-    res.sendFile(path.join(__dirname, '/html/valid.html'));
+    try {
+        const guild = await client.guilds.fetch(config.Discord.guildId);
+        const member = await guild.members.fetch(discordId);
+
+        const accountAgeInDays = (Date.now() - member.user.createdTimestamp) / (1000 * 60 * 60 * 24);
+        if (accountAgeInDays < 8) {
+            logger.warn(`Blocked verification for ${discordId} due to account age below 8 days.`);
+            return res.sendFile(path.join(__dirname, '/html/invalidAccount.html'));
+        }
+
+        if (!member.user.avatar) {
+            logger.warn(`Blocked verification for ${discordId} due to missing profile picture.`);
+            return res.sendFile(path.join(__dirname, '/html/invalidAccount.html'));
+        }
+
+        pool.setAccountIp(discordId, requestIpAddress);
+        await addRole(discordId);
+        await removeRole(discordId);
+        pool.removeLink(req.params.verifyId);
+        return res.sendFile(path.join(__dirname, '/html/valid.html'));
+    } catch (error) {
+        logger.error(`Failed to fetch member ${discordId} for verification checks.`);
+        return res.sendFile(path.join(__dirname, '/html/invalidAccount.html'));
+    }
 });
 
 const start = () => {
