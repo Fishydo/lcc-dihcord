@@ -1,8 +1,8 @@
 module.exports = {
     server: {
-        domain: "localhost",
-        https: false,
-        httpPort: 8080,
+        domain: "lcc-discord.onrender.com",
+        https: true,
+        httpPort: ,
     },
 
     Discord: {
