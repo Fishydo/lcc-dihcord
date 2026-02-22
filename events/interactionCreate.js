@@ -16,8 +16,8 @@ module.exports = {
 
                     const captchaEmbed = new EmbedBuilder()
                         .setColor('#0099ff')
-                        .setTitle('reCAPTCHA Verification')
-                        .setDescription(`To gain access to this server you must solve a captcha. The link will expire in 15 minutes.\n${config.https ? 'https://' : 'http://'}${config.domain}/verify/${linkID}`)
+                        .setTitle('alr bud')
+                        .setDescription(`u have 15 minutes to verify urself at da linky.\n${config.https ? 'https://' : 'http://'}${config.domain}/verify/${linkID}`)
                 
                     dm.send({ embeds: [captchaEmbed] }).catch(() => {
                         logger.error(`Failed to send captcha to user! (Maybe they have DMs turned off?)`);
@@ -25,4 +25,5 @@ module.exports = {
                 })
             }
 	},
+
 };
